@@ -1,0 +1,31 @@
+name: Trigger Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      repo-name:
+        description: "Repository name to build and deploy"
+        required: true
+        type: string
+      branch:
+        description: "Branch to deploy from"
+        required: true
+        type: string
+        default: "main"
+      environment:
+        description: "Environment for deployment"
+        required: true
+        type: string
+        default: "dev"
+
+jobs:
+  call-workflow:
+    uses: sleighsoft/centralpipeline/.github/workflows/ci.yml@main
+    with:
+      repo-name: ${{ inputs.repo-name }}
+      branch: ${{ inputs.branch }}
+      environment: ${{ inputs.environment }}
+    secrets: inherit

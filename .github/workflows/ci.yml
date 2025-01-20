@@ -1,0 +1,41 @@
+name: Centralized Build and Deploy
+
+on:
+  workflow_call:
+    inputs:
+      repo-name:
+        description: "Repository name to build"
+        required: true
+        type: string
+      branch:
+        description: "Branch for deployment"
+        required: true
+        type: string
+        default: "main"
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: string
+        default: "dev"
+
+jobs:
+  build:
+    runs-on: github
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          repository: sleighsoft/${{ inputs.repo-name }}
+          ref: ${{ inputs.branch }}
+
+      - name: Build project
+        run: |
+          echo "Building"
+
+  deploy:
+    runs-on: github
+    needs: build
+    steps:
+      - name: Deploy using Helm
+        run: |
+          echo "Deploying"
